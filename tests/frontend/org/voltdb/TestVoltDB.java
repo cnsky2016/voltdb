@@ -143,22 +143,18 @@ final public class TestVoltDB {
         String args23[] = { "create", "replica" };
         VoltDB.Configuration cfg23 = new VoltDB.Configuration(args23);
         assertEquals(StartAction.CREATE, cfg23.m_startAction);
-        assertEquals(ReplicationRole.REPLICA, cfg23.m_replicationRole);
 
         String args24[] = { "recover", "replica" };
         VoltDB.Configuration cfg24 = new VoltDB.Configuration(args24);
         assertEquals(StartAction.RECOVER, cfg24.m_startAction);
-        assertEquals(ReplicationRole.REPLICA, cfg24.m_replicationRole);
 
         String args25[] = { "rejoin", "replica" };
         VoltDB.Configuration cfg25 = new VoltDB.Configuration(args25);
         assertEquals(StartAction.REJOIN, cfg25.m_startAction);
-        assertEquals(ReplicationRole.REPLICA, cfg25.m_replicationRole);
 
         String args26[] = { "live rejoin", "replica" };
         VoltDB.Configuration cfg26 = new VoltDB.Configuration(args26);
         assertEquals(StartAction.LIVE_REJOIN, cfg26.m_startAction);
-        assertEquals(ReplicationRole.REPLICA, cfg26.m_replicationRole);
     }
 
     @Test

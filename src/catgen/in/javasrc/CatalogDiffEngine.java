@@ -916,6 +916,21 @@ public class CatalogDiffEngine {
                 else {
                     return null;
                 }
+            } else if (field.equals("drRole")) {
+                final String prevRole = (String) prevType.getField("drRole");
+                final String newRole = (String) suspect.getField("drRole");
+                // Promote from replica to master
+                if (prevRole.equals("replica") && newRole.equals("master")) {
+                    return null;
+                }
+                // Enabling DR from none to master
+                else if (prevRole.equals("replica") && newRole.equals("master")) {
+                    return null;
+                }
+                // Everything else is illegal
+                else {
+                    restrictionQualifier = " from " + prevRole + " to " + newRole;
+                }
             }
         }
 

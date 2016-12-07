@@ -64,6 +64,7 @@ public class TestLiveDDLSchemaSwitch extends AdhocDDLTestBase {
 
     String m_pathToCatalog;
     String m_pathToDeployment;
+    String m_pathToReplicaDeployment;
     String m_pathToOtherCatalog;
     String m_pathToOtherDeployment;
 
@@ -71,6 +72,7 @@ public class TestLiveDDLSchemaSwitch extends AdhocDDLTestBase {
     {
         m_pathToCatalog = Configuration.getPathToCatalogForTest("adhocddl.jar");
         m_pathToDeployment = Configuration.getPathToCatalogForTest("adhocddl.xml");
+        m_pathToReplicaDeployment = Configuration.getPathToCatalogForTest("replicaadhocddl.xml");
         m_pathToOtherCatalog = Configuration.getPathToCatalogForTest("newadhocddl.jar");
         m_pathToOtherDeployment = Configuration.getPathToCatalogForTest("newadhocddl.xml");
 
@@ -91,6 +93,11 @@ public class TestLiveDDLSchemaSwitch extends AdhocDDLTestBase {
         builder.setUseDDLSchema(useLiveDDL);
         builder.setDRMasterHost("localhost"); // fake DR connection so that replica can start
         boolean success = builder.compile(m_pathToCatalog, 2, 1, 0);
+        assertTrue("Schema compilation failed", success);
+        MiscUtils.copyFile(builder.getPathToDeployment(), m_pathToDeployment);
+
+        builder.setDrReplica();
+        success = builder.compile(m_pathToCatalog, 2, 1, 0);
         assertTrue("Schema compilation failed", success);
         MiscUtils.copyFile(builder.getPathToDeployment(), m_pathToDeployment);
 
@@ -280,8 +287,7 @@ public class TestLiveDDLSchemaSwitch extends AdhocDDLTestBase {
         // Fire up a cluster with no catalog
         VoltDB.Configuration config = new VoltDB.Configuration();
         config.m_pathToCatalog = m_pathToOtherCatalog;
-        config.m_pathToDeployment = m_pathToDeployment;
-        config.m_replicationRole = ReplicationRole.REPLICA;
+        config.m_pathToDeployment = m_pathToReplicaDeployment;
 
         try {
             startSystem(config);
@@ -355,8 +361,7 @@ public class TestLiveDDLSchemaSwitch extends AdhocDDLTestBase {
         // Fire up a cluster with no catalog
         VoltDB.Configuration config = new VoltDB.Configuration();
         config.m_pathToCatalog = m_pathToOtherCatalog;
-        config.m_pathToDeployment = m_pathToDeployment;
-        config.m_replicationRole = ReplicationRole.REPLICA;
+        config.m_pathToDeployment = m_pathToReplicaDeployment;
 
         try {
             startSystem(config);
