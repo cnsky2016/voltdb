@@ -79,6 +79,9 @@ public class AsyncCompilerAgentHelper
             else if (work.invocationName.equals("@UpdateClasses")) {
                 // provided operationString is really a String with class patterns to delete,
                 // provided newCatalogJar is the jarfile with the new classes
+                if (work.operationBytes != null) {
+                    newCatalogJar = new InMemoryJarfile(work.operationBytes);
+                }
                 try {
                     newCatalogJar = modifyCatalogClasses(oldJar, work.operationString,
                             newCatalogJar);
@@ -93,7 +96,6 @@ public class AsyncCompilerAgentHelper
                 deploymentString = null;
             }
             else if (work.invocationName.startsWith("@AdHoc")) {
-                // newCatalogBytes and deploymentString should be null.
                 // work.adhocDDLStmts should be applied to the current catalog
                 try {
                     newCatalogJar = addDDLToCatalog(context.catalog, oldJar, work.adhocDDLStmts);
