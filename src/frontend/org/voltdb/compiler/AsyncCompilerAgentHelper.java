@@ -68,14 +68,17 @@ public class AsyncCompilerAgentHelper
             String deploymentString = work.operationString;
             if (work.invocationName.equals("@UpdateApplicationCatalog")) {
                 // Grab the current catalog bytes if @UAC had a null catalog from deployment-only update
-                newCatalogJar = getJarFromBytes(work.operationBytes);
+                if (work.operationBytes == null) {
+                    newCatalogJar = oldJar;
+                } else {
+                    newCatalogJar = new InMemoryJarfile(work.operationBytes);
+                }
                 // If the deploymentString is null, we'll fill it in with current deployment later
                 // Otherwise, deploymentString has the right contents, don't need to touch it
             }
             else if (work.invocationName.equals("@UpdateClasses")) {
                 // provided operationString is really a String with class patterns to delete,
                 // provided newCatalogJar is the jarfile with the new classes
-                newCatalogJar = getJarFromBytes(work.operationBytes);
                 try {
                     newCatalogJar = modifyCatalogClasses(oldJar, work.operationString,
                             newCatalogJar);
@@ -238,13 +241,6 @@ public class AsyncCompilerAgentHelper
         }
 
         return retval;
-    }
-
-    private InMemoryJarfile getJarFromBytes(byte[] bytes) throws IOException {
-        if (bytes == null) {
-            return null;
-        }
-        return new InMemoryJarfile(bytes);
     }
 
     /**
