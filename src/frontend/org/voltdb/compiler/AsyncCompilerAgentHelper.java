@@ -71,7 +71,7 @@ public class AsyncCompilerAgentHelper
                 if (work.operationBytes == null) {
                     newCatalogJar = oldJar;
                 } else {
-                    newCatalogJar = new InMemoryJarfile(work.operationBytes);
+                    newCatalogJar = CatalogUtil.loadInMemoryJarFile(work.operationBytes);
                 }
                 // If the deploymentString is null, we'll fill it in with current deployment later
                 // Otherwise, deploymentString has the right contents, don't need to touch it
